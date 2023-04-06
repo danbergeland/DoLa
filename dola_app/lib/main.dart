@@ -34,9 +34,29 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    Widget renderPage;
+    switch (selectedIndex) {
+      case (0):
+        renderPage = GeneratorPage();
+        break;
+      case (1):
+        renderPage = SecondPage();
+        break;
+      default:
+        throw UnimplementedError(
+            'Navigation Rail index $selectedIndex not assigned or out of range');
+    }
+
     return Scaffold(
       body: Row(
         children: [
@@ -53,21 +73,31 @@ class MyHomePage extends StatelessWidget {
                   label: Text('Favorites'),
                 ),
               ],
-              selectedIndex: 0,
+              selectedIndex: selectedIndex,
               onDestinationSelected: (value) {
-                print('selected: $value');
+                setState(() {
+                  selectedIndex = value;
+                });
+                ;
               },
             ),
           ),
           Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer,
-              child: GeneratorPage(),
+              child: renderPage,
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [Text('Hooray')]);
   }
 }
 
